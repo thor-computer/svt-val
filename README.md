@@ -1,0 +1,1 @@
+This repository contains a Selenium-based workflow to extract election polling from https://www.svt.se/datajournalistik/bygg-en-valjare/

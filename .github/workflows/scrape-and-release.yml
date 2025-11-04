@@ -1,0 +1,37 @@
+name: Scrape SVT Data and Create Release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  scrape-and-release:
+    runs-on: windows-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Run scraping script
+        run: .\bat.bat
+      
+      - name: Generate release tag
+        id: tag
+        run: |
+          $timestamp = Get-Date -Format "yyyy-MM-dd-HHmmss"
+          echo "tag=release-$timestamp" >> $env:GITHUB_OUTPUT
+        shell: pwsh
+      
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: SVT Data Release ${{ steps.tag.outputs.tag }}
+          body: Automated scrape of SVT väljare data
+          files: csv.csv
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
