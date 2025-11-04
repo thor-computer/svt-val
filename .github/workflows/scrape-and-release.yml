@@ -19,6 +19,12 @@ jobs:
       - name: Set up ChromeDriver
         uses: nanasess/setup-chromedriver@v2
       
+      - name: Remove old ChromeDriver from PATH
+        run: |
+          Remove-Item -Path "C:\SeleniumWebDrivers\ChromeDriver\chromedriver.exe" -Force -ErrorAction SilentlyContinue
+          Write-Host "Removed old ChromeDriver"
+        shell: pwsh
+      
       - name: Run scraping script
         run: .\bat.bat
       
