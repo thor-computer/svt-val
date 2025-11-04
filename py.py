@@ -158,26 +158,34 @@ def collect_all_combinations(url, output_dir):
     csv_initialized = False
     
     try:
+        print("Initializing Chrome WebDriver...")
         driver = webdriver.Chrome(options=chrome_options)
-        print(f"Loading page with Selenium...")
+        print("✓ Chrome WebDriver initialized successfully")
+        
+        print(f"Loading page: {url}")
         driver.get(url)
+        print("✓ Page loaded, waiting for JavaScript to render...")
         
         # Wait for page to load
         time.sleep(5)
+        print("✓ Page rendering complete")
         
         # Get all filter options
-        print("Extracting filter options...")
+        print("\nExtracting filter options...")
         filters = get_filter_options(driver)
+        print(f"✓ Found {len(filters)} filter categories")
         
         # Print filter structure
         for category, info in filters.items():
-            print(f"  {category}: {len(info['options'])} options")
+            print(f"  • {category}: {len(info['options'])} options")
         
         # Calculate total combinations
         total = 1
         for info in filters.values():
             total *= len(info['options'])
-        print(f"\nTotal combinations: {total}")
+        total_rows = total * 9  # 9 parties per combination
+        print(f"\n📊 Total filter combinations: {total:,}")
+        print(f"📊 Total CSV rows to generate: {total_rows:,} ({total:,} combinations × 9 parties)")
         
         # Define column order - now with Parti and Procent instead of party columns
         filter_columns = ['Kön', 'Ålder', 'Yrke', 'Region', 'Boende', 'Utbildning', 'Fack']
@@ -210,7 +218,9 @@ def collect_all_combinations(url, output_dir):
                         all_data.append(result)
                 
                 if len(all_data) % 100 == 0:
-                    print(f"Processed {len(all_data)} rows...")
+                    combinations_done = len(all_data) // 9
+                    percent = (len(all_data) / total_rows) * 100 if total_rows > 0 else 0
+                    print(f"Progress: {len(all_data):,} rows ({combinations_done:,} combinations) - {percent:.1f}% complete")
                 
                 return
             
@@ -232,10 +242,17 @@ def collect_all_combinations(url, output_dir):
                 iterate_combinations(category_index + 1, new_selection)
         
         # Start iteration
-        print("\nCollecting data for all combinations...")
+        print("\n" + "="*60)
+        print("Starting data collection...")
+        print("="*60)
+        start_time = time.time()
         iterate_combinations(0, {})
+        elapsed = time.time() - start_time
         
-        print(f"\nCompleted! Collected {len(all_data)} combinations")
+        print("\n" + "="*60)
+        print(f"✓ Completed! Collected {len(all_data):,} rows")
+        print(f"✓ Time elapsed: {elapsed/60:.1f} minutes")
+        print("="*60)
         return all_data
         
     except Exception as e:
