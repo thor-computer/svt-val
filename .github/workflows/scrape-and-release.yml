@@ -3,6 +3,9 @@ name: Scrape SVT Data and Create Release
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   scrape-and-release:
     runs-on: windows-latest
