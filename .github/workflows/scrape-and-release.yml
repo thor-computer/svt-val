@@ -16,10 +16,8 @@ jobs:
         with:
           python-version: '3.11'
       
-      - name: Set up Chrome and ChromeDriver
-        uses: browser-actions/setup-chrome@v1
-        with:
-          chrome-version: stable
+      - name: Set up ChromeDriver
+        uses: nanasess/setup-chromedriver@v2
       
       - name: Run scraping script
         run: .\bat.bat
