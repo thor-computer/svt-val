@@ -134,13 +134,14 @@ def extract_graph_data(driver):
     
     return data
 
-def collect_all_combinations(url, output_dir):
+def collect_all_combinations(url, output_dir, max_combinations=None):
     """
     Collect graph data for all filter combinations.
     
     Args:
         url: The URL to scrape
         output_dir: Path object for output directory
+        max_combinations: Maximum number of combinations to process (None for all)
     
     Returns:
         list: List of dictionaries with filter settings and graph data
@@ -196,6 +197,10 @@ def collect_all_combinations(url, output_dir):
         
         def iterate_combinations(category_index, current_selection):
             nonlocal all_data, csv_initialized
+            
+            # Stop if we've reached the max combinations limit
+            if max_combinations and len(all_data) >= max_combinations * 9:
+                return
             
             if category_index >= len(categories):
                 # Extract data for this combination
@@ -301,11 +306,17 @@ def extract_text_values(html_content):
 if __name__ == "__main__":
     url = "https://www.svt.se/datajournalistik/bygg-en-valjare/"
     
+    # TEST MODE: Set to a small number for testing, None for full scrape
+    TEST_MODE = 1  # Only scrape 1 combination (9 rows)
+    
     # Output to root directory
     output_dir = Path(".")
     
+    if TEST_MODE:
+        print(f"\n*** TEST MODE: Only scraping {TEST_MODE} combinations ***\n")
+    
     # Collect data for all filter combinations (saves each row immediately)
-    all_data = collect_all_combinations(url, output_dir)
+    all_data = collect_all_combinations(url, output_dir, max_combinations=TEST_MODE)
     
     print(f"\nFinal summary:")
     print(f"  Total rows collected: {len(all_data)}")
