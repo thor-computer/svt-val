@@ -160,32 +160,32 @@ def collect_all_combinations(url, output_dir):
     try:
         print("Initializing Chrome WebDriver...")
         driver = webdriver.Chrome(options=chrome_options)
-        print("✓ Chrome WebDriver initialized successfully")
+        print("[OK] Chrome WebDriver initialized successfully")
         
         print(f"Loading page: {url}")
         driver.get(url)
-        print("✓ Page loaded, waiting for JavaScript to render...")
+        print("[OK] Page loaded, waiting for JavaScript to render...")
         
         # Wait for page to load
         time.sleep(5)
-        print("✓ Page rendering complete")
+        print("[OK] Page rendering complete")
         
         # Get all filter options
         print("\nExtracting filter options...")
         filters = get_filter_options(driver)
-        print(f"✓ Found {len(filters)} filter categories")
+        print(f"[OK] Found {len(filters)} filter categories")
         
         # Print filter structure
         for category, info in filters.items():
-            print(f"  • {category}: {len(info['options'])} options")
+            print(f"  - {category}: {len(info['options'])} options")
         
         # Calculate total combinations
         total = 1
         for info in filters.values():
             total *= len(info['options'])
         total_rows = total * 9  # 9 parties per combination
-        print(f"\n📊 Total filter combinations: {total:,}")
-        print(f"📊 Total CSV rows to generate: {total_rows:,} ({total:,} combinations × 9 parties)")
+        print(f"\n[INFO] Total filter combinations: {total:,}")
+        print(f"[INFO] Total CSV rows to generate: {total_rows:,} ({total:,} combinations x 9 parties)")
         
         # Define column order - now with Parti and Procent instead of party columns
         filter_columns = ['Kön', 'Ålder', 'Yrke', 'Region', 'Boende', 'Utbildning', 'Fack']
@@ -250,8 +250,8 @@ def collect_all_combinations(url, output_dir):
         elapsed = time.time() - start_time
         
         print("\n" + "="*60)
-        print(f"✓ Completed! Collected {len(all_data):,} rows")
-        print(f"✓ Time elapsed: {elapsed/60:.1f} minutes")
+        print(f"[DONE] Completed! Collected {len(all_data):,} rows")
+        print(f"[DONE] Time elapsed: {elapsed/60:.1f} minutes")
         print("="*60)
         return all_data
         
