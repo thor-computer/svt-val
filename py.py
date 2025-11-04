@@ -179,9 +179,9 @@ def collect_all_combinations(url, output_dir):
             total *= len(info['options'])
         print(f"\nTotal combinations: {total}")
         
-        # Define column order - now with Party and Value instead of party columns
+        # Define column order - now with Parti and Procent instead of party columns
         filter_columns = ['Kön', 'Ålder', 'Yrke', 'Region', 'Boende', 'Utbildning', 'Fack']
-        all_columns = filter_columns + ['Party', 'Value']
+        all_columns = filter_columns + ['Parti', 'Procent']
         
         # Iterate through all combinations
         categories = list(filters.keys())
@@ -204,8 +204,8 @@ def collect_all_combinations(url, output_dir):
                     # Write a row for each party
                     for party, value in graph_data.items():
                         result = current_selection.copy()
-                        result['Party'] = party
-                        result['Value'] = value
+                        result['Parti'] = party
+                        result['Procent'] = value
                         writer.writerow(result)
                         all_data.append(result)
                 
